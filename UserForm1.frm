@@ -32,6 +32,7 @@ Private Sub CommandButton1_Click()
   ElseIf button = vbYes Then
     Dim ws As Worksheet
     Dim chartSheet As Worksheet
+    Set chartSheet = Worksheets("グラフ")
     
     For Each ws In ThisWorkbook.Worksheets
       ws.Select
@@ -40,52 +41,35 @@ Private Sub CommandButton1_Click()
           ' 処理対象外なので、処理なし
           
         Case "グラフ"
-'        ' グラフのシートに対して以下の処理を実行
-'        Dim range As range
-'        Dim cell As range
-
-        Set chartSheet = Worksheets("グラフ")
-
-'        ' グラフシート内の異物項目の取得
-'        Set range = chartSheet.range(Cells(6, 2), Cells(6, 100))
-'        Set range = range.SpecialCells(xlCellTypeConstants)
-'
-'        For Each cell In range
-'          ' グラフシート内の異物項目名とユーザーフォームで選択した異物項目名が一致した時、以下の処理を実行
-'          If cell.Value = UserForm1.ComboBox1.Value Then
-'            cell.ClearContents
-'
-'            Dim i As Long
-'            For i = 2 To 100
-'              If IsEmpty(Cells(6, i + 1).Value) Then
-'                Exit For
-'              End If
-'              If IsEmpty(Cells(6, i).Value) Then
-'                Cells(6, i + 1).Offset(0, -1).Value = Cells(6, i + 1).Value
-'              End If
-'            Next i
-'            Exit For
-'          End If
-'        Next cell
-      Dim i As Long
-      For i = 2 To 100
-        If IsEmpty(Cells(6, i + 1).Value) Then
-          Exit For
-        End If
-        If Cells(6, i).Value = UserForm1.ComboBox1.Value Then
-          Cells(6, i).ClearContents
-          Cells(7, i).ClearContents
-        End If
-        If IsEmpty(Cells(6, i).Value) Then
-          Cells(6, i + 1).Offset(0, -1).Value = Cells(6, i + 1).Value
-          Cells(6, i + 1).ClearContents
-          Cells(7, i + 1).Offset(0, -1).Value = Cells(7, i + 1).Value
-          Cells(7, i + 1).ClearContents
-        End If
-      Next i
+        ' グラフシートに以下の処理を実行
+        Dim i As Long
+        For i = 2 To 100
+          If IsEmpty(Cells(6, i + 1).Value) Then
+            range(Cells(6, i), Cells(7, i)).Delete
+            Exit For
+          End If
+          If Cells(6, i).Value = UserForm1.ComboBox1.Value Then
+            Cells(6, i).ClearContents
+          End If
+          If IsEmpty(Cells(6, i).Value) Then
+            Cells(6, i + 1).Offset(0, -1).Value = Cells(6, i + 1).Value
+            Cells(6, i + 1).ClearContents
+          End If
+        Next i
+        
+        Case Else
+        ' 商品のシートに以下の処理を実行
+        Dim n As Long
+        For n = 4 To 100
+          If Cells(6, n).Value = UserForm1.ComboBox1.Value Then
+            range(Cells(6, n), Cells(35, n)).Delete Shift:=xlToLeft
+            Exit For
+          End If
+        Next n
         
       End Select
     Next ws
     chartSheet.Select
   End If
+  Unload Me
 End Sub
