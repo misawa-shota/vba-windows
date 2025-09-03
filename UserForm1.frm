@@ -63,6 +63,9 @@ Private Sub CommandButton1_Click()
         For n = 4 To 100
           If Cells(6, n).Value = UserForm1.ComboBox1.Value Then
             range(Cells(6, n), Cells(35, n)).Delete Shift:=xlToLeft
+            If IsEmpty(Cells(6, n + 1).Value) Then
+              range(Cells(6, n), Cells(35, n)).Borders(xlEdgeLeft).Weight = xlMedium
+            End If
             Exit For
           End If
         Next n
